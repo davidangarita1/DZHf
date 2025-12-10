@@ -152,6 +152,7 @@ def _(df_good, px):
     #Parámetros de la figura
     fig = px.scatter(
         df_good,
+        x="t(Ma)",
         y="ehf",
         color ="sampleid",
         error_y="2s",
