@@ -4,6 +4,14 @@ __generated_with = "0.18.3"
 app = marimo.App(width="medium")
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Importar librerias
+    """)
+    return
+
+
 @app.cell
 def _():
     import quak
@@ -15,8 +23,17 @@ def _():
     return mo, np, pd, px
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Crear y ajustar dataframe
+    """)
+    return
+
+
 @app.cell
 def _(pd):
+    #Crear dataframe 
     df = pd.read_excel(r'data\Hf.xlsx').rename(columns = {
         "176Hf/177Hf":"176Hf_177Hf",
         "176Lu/177Hf":"176Lu_177Hf",
@@ -24,34 +41,19 @@ def _(pd):
 
     })
 
-    df[["sampleid", "number"]] = df['Sample'].str.split('_', expand=True, n=1)
+    #Ajuste de nombre de columna Sample para cálculos y gráficos
+    df[["sampleid", "number"]] = df['Sample'].str.split('_', expand=True, n=1) 
 
+    #Conversión de unidades de Ga a Ma
+    df["t(Ma)"] = df["t(Ga)"]*1000 
+    df
     return (df,)
-
-
-@app.cell
-def _(df):
-    #Filtrar outliers
-    q1, q3 = df["t(Ga)"].quantile([.05, .95])
-    IRQ = q3 - q1
-    print(q1, q3)
-
-    df_good = df[
-        mask := df["t(Ga)"].between(q1-IRQ, q3+IRQ)
-    ]
-    df_bad = df[-mask]
-
-    print(f"Size original: {df.shape}")
-    print(f"Size filtered: {df_good.shape}")
-    print(f"Ratio: {df_good.shape[0]/df.shape[0]}")
-    df_bad
-    return (df_good,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    # Calculate $\epsilon$-Hafnium
+    # Calcular $\epsilon$-Hafnium y propagar errores
     """)
     return
 
@@ -59,7 +61,7 @@ def _(mo):
 @app.cell
 def _():
     # Valores constantes de Hf y Lu en Depleted Mantle y CHUR
-    # Vervoort et al. 2018 values
+    # Vervoort et al. 2018
     Hf_DM = 0.283225
     Lu_DM = 0.0383
 
@@ -74,50 +76,96 @@ def _():
 
 
 @app.cell
-def _(Hf_CHUR, Lu_CHUR, df, df_good, lam_Lu, np):
-    # calcular eHfi 
+def _(Hf_CHUR, Lu_CHUR, df, lam_Lu, np):
+    # calcular eHfi y propagar errores 
 
-    # Columns of interest
-    t = df_good["t(Ga)"] 
-    Lu176_Hf177 = df_good["176Lu_177Hf"] 
-    Hf176_Hf177 = df_good["176Hf_177Hf"]
+    # Columnas de interés
+    t = df["t(Ga)"] 
+    Lu176_Hf177 = df["176Lu_177Hf"] 
+    Hf176_Hf177 = df["176Hf_177Hf"]
 
-    # Calculation of eHf
+    # Calcular eHf
     decaimiento = np.exp( lam_Lu * t ) - 1
     _numerador = Hf176_Hf177 - Lu176_Hf177*decaimiento
     _denominador = Hf_CHUR - Lu_CHUR*decaimiento
-    _ehf = 10_000 * ((_numerador/_denominador)-1)
+    df["ehf"] = 10_000 * ((_numerador/_denominador)-1)
+
+    #Calcular CHUR_t a determinada edad
+    CHUR_t = Hf_CHUR - Lu_CHUR * decaimiento
+
+    #Calcular 2s para los valores de eHf
+    two_sigma = 2*(pow(10, 4) * (df["1 s error.1"] / CHUR_t))
+    df["2s"] = two_sigma
+
+    df
+
+    return Hf176_Hf177, decaimiento
 
 
-    df_with_ehf=df.assign(ehf=_ehf)
-
-    df_with_ehf
-
-    return Hf176_Hf177, decaimiento, df_with_ehf
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Filtrar outliers y datos eHf con errores altos
+    """)
+    return
 
 
 @app.cell
-def _(df_with_ehf, px):
-    colores = { # Color scheme for different samples
-      "060065":"red",
-      "060067":"green",
-      "060072":"blue",
-      "070242":"black",
-      "300351":"yellow",
-      "300339":"purple",
-      "300334":"pink",
-    }
-    linea_recta_x = (0.03, .08)
-    linea_recta_y = (-10, 10)
+def _(df):
+    #Calcular cuatiles q1 y q3 de las edades
+    q1, q3 = df["t(Ga)"].quantile([.05, .95])
+    IRQ = q3 - q1
+    print(q1, q3)
 
+    #Separar los datos outliers y errores muy altos
+    df_good = df[
+        mask := (
+            df["t(Ga)"].between(q1 - IRQ, q3 + IRQ)
+            & (df["2s"] < 2.5)
+        )
+    ]
+    df_bad = df[-mask] #Lista de outliers
+
+    print(f"Size original: {df.shape}")
+    print(f"Size filtered: {df_good.shape}")
+    print(f"Ratio: {df_good.shape[0]/df.shape[0]}")
+
+    #Datos filtrados
+    df_bad
+    return (df_good,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Figura $\epsilon$-Hafnium vs Edad (Ma)
+    """)
+    return
+
+
+@app.cell
+def _(df_good, px):
+    #Coordenadas de la línea de DM
+    linea_DM_x = (0, 4500)
+    linea_DM_y = (18, 0)
+
+    #Coordenadas de la línea de CHUR
+    linea_CHUR_x = (0, 4500)
+    linea_CHUR_y = (0, 0)
+
+    #Parámetros de la figura
     fig = px.scatter(
-        df_with_ehf,
-        x="t(Ga)",
+        df_good,
+        x="t(Ma)",
         y="ehf",
         color ="sampleid",
-        color_discrete_map=colores)
-
-    fig.add_scatter(name="referencia", x=linea_recta_x, y=linea_recta_y)
+        error_y="2s",
+        marginal_x="rug",
+        marginal_y="box",
+        title="eHf vs Age (Ma)")
+   
+    fig.add_scatter(name="Depleted mantle", x=linea_DM_x, y=linea_DM_y)
+    fig.add_scatter(name="CHUR", x=linea_CHUR_x, y=linea_CHUR_y)
     fig
     return
 
@@ -125,7 +173,7 @@ def _(df_with_ehf, px):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Other Thing
+    #Two‑stage crustal model age (Para circones antiguos)
     """)
     return
 
@@ -139,7 +187,6 @@ def _(Hf176_Hf177, Hf_DM, Lu_DM, Lu_crust, decaimiento, lam_Lu, np):
 
     tdm2 = (1 / lam_Lu) * np.log(_numerador/_denominador + 1)
     tdm2
-
     return
 
 
