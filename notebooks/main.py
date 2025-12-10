@@ -4,6 +4,14 @@ __generated_with = "0.18.3"
 app = marimo.App(width="medium")
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Importar librerias
+    """)
+    return
+
+
 @app.cell
 def _():
     import quak
@@ -13,6 +21,14 @@ def _():
     import plotly.express as px
     import plotly.graph_objects as go
     return mo, np, pd, px
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Crear y ajustar dataframe
+    """)
+    return
 
 
 @app.cell
