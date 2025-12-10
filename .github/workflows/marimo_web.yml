@@ -12,7 +12,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: astral-sh/setup-uv@v5
             - run: |
-                  sed -i 's/Path("data/")/mo.notebook_location() / "public/data/"/g' notebooks/main.py
+                  sed -i 's|Path("data/")|mo.notebook_location() / "public/data/"|g' notebooks/main.py
             - name: 📄 Export notebook
               run: |
                   uv run marimo export html-wasm notebooks/main.py -o site --mode run
