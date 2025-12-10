@@ -13,7 +13,7 @@ jobs:
             - uses: astral-sh/setup-uv@v5
             - name: 📄 Export notebook
               run: |
-                  uv run marimo export html-wasm notebooks/main.py -o site --mode run
+                  uv run marimo export html-wasm notebooks/main.py -o site --mode edit
             - run: |
                   cp -r data site
             - name: 📦 Upload Pages Artifact
