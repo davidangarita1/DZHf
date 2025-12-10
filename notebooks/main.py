@@ -136,15 +136,18 @@ def _(df_good, px):
     linea_CHUR_x = (0, 4500)
     linea_CHUR_y = (0, 0)
 
+    #Parámetros de la figura
     fig = px.scatter(
-        df_with_ehf,
-        x="t(Ga)",
         df_good,
         y="ehf",
         color ="sampleid",
-        color_discrete_map=colores)
-
-    fig.add_scatter(name="referencia", x=linea_recta_x, y=linea_recta_y)
+        error_y="2s",
+        marginal_x="rug",
+        marginal_y="box",
+        title="eHf vs Age (Ma)")
+   
+    fig.add_scatter(name="Depleted mantle", x=linea_DM_x, y=linea_DM_y)
+    fig.add_scatter(name="CHUR", x=linea_CHUR_x, y=linea_CHUR_y)
     fig
     return
 
