@@ -128,9 +128,13 @@ def _(mo):
 
 
 @app.cell
-    linea_recta_x = (0.03, .08)
-    linea_recta_y = (-10, 10)
 def _(df_good, px):
+    #Coordenadas de la línea de DM
+    linea_DM_x = (0, 4500)
+    linea_DM_y = (18, 0)
+    #Coordenadas de la línea de CHUR
+    linea_CHUR_x = (0, 4500)
+    linea_CHUR_y = (0, 0)
 
     fig = px.scatter(
         df_with_ehf,
