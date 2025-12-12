@@ -137,8 +137,6 @@ def _(df):
     print(f"Size filtered: {df_good.shape}")
     print(f"Ratio: {df_good.shape[0]/df.shape[0]}")
 
-    #Datos filtrados
-    df_bad
     return (df_good,)
 
 
