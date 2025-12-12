@@ -12,5 +12,9 @@ wheels/
 
 # Cache de marimo
 __marimo__
+
+# Data Files
 data/eHf_by_sample.xlsx
 /Ramirez et al 2016
+
+# Pagina Generado
