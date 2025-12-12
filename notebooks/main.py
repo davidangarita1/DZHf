@@ -173,7 +173,7 @@ def _(df_good):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Figura $\epsilon$-Hafnium vs Edad (Ma)
+    #Figura $\epsilon$-Hafnio  vs Edad (Ma)
     """)
     return
 
@@ -189,7 +189,7 @@ def _(chur_xs, chur_ys, df_good, dm_xs, dm_ys, go, px):
         error_y="2s",
         marginal_x="rug",
         marginal_y="box",
-        title="eHf vs Age (Ma)")
+        title="ε-Hafnio vs. Edad (Ma)")
 
     #Rectangulos de rocas fuentes
     #Pluton de Parita
