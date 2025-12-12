@@ -14,17 +14,13 @@ def _(mo):
 
 @app.cell
 def _():
-    from pathlib import Path
-
     import pandas as pd
     import marimo as mo
     import numpy as np
     import plotly.express as px
     import plotly.graph_objects as go
     import openpyxl
-
-    DATA_DIR = Path("data/")
-    return DATA_DIR, go, mo, np, pd, px
+    return go, mo, np, pd, px
 
 
 @app.cell(hide_code=True)
@@ -36,9 +32,15 @@ def _(mo):
 
 
 @app.cell
-def _(DATA_DIR, pd):
+def _():
+    DATA_LOCATION = "https://diegoaramirez-glitch.github.io/DZHf/public/data/Hf.xlsx"
+    return (DATA_LOCATION,)
+
+
+@app.cell
+def _(DATA_LOCATION, pd):
     #Crear dataframe 
-    df = pd.read_excel(DATA_DIR / 'Hf.xlsx').rename(columns = {
+    df = pd.read_excel(DATA_LOCATION).rename(columns = {
         "176Hf/177Hf":"176Hf_177Hf",
         "176Lu/177Hf":"176Lu_177Hf",
         "176Hf/177Hf(t)": "176Hf_177Hf(t)",
