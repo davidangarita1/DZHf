@@ -7,6 +7,14 @@ app = marimo.App(width="medium", layout_file="layouts/main.grid.json")
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    #Eocene-Miocene source-to-sink dynamics in Panama using U-Pb-Hf in zircons
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     #Import libraries
     """)
     return
@@ -209,8 +217,7 @@ def _(chur_xs, chur_ys, df_good, dm_xs, dm_ys, go, px):
             title="<b>Legend<b>" 
         )
     )
- 
-  
+
     #Rectangulos de rocas fuentes
     #Pluton de Parita
     fig.add_trace(
