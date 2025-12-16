@@ -15,7 +15,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Import libraries
+    ##Import libraries
     """)
     return
 
@@ -35,7 +35,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Create and adjust dataframe
+    ##Create and adjust dataframe
     """)
     return
 
@@ -71,7 +71,7 @@ def _(df, mo, quak):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    # Calculate $\epsilon$-Hafnium and error propagation
+    ## Calculate $\epsilon$-Hafnium and error propagation
     """)
     return
 
@@ -119,7 +119,7 @@ def _(Hf_CHUR, Lu_CHUR, df, lam_Lu, np):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Filter outliers and high errors
+    ##Filter outliers and high errors
     """)
     return
 
@@ -149,7 +149,7 @@ def _(df):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Calculate DM line for time segment
+    ##Calculate DM line for time segment
     """)
     return
 
@@ -178,7 +178,7 @@ def _(df_good):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #$\epsilon$-Hafnio  vs Age (Ma)
+    ##$\epsilon$-Hafnio  vs Age (Ma)
     """)
     return
 
@@ -203,7 +203,7 @@ def _(chur_xs, chur_ys, df_good, dm_xs, dm_ys, go, px):
             showticklabels=True,
             ticks="outside"
         ),
-    
+
         yaxis = dict(
             showline=True,
             showgrid=False,
@@ -211,6 +211,7 @@ def _(chur_xs, chur_ys, df_good, dm_xs, dm_ys, go, px):
             ticks="outside"
         ),
         plot_bgcolor="white",
+        paper_bgcolor="white",
         yaxis_title_text="<b>εHf</b>",
         xaxis_title_text="<b>time(Ma)</b>",
         legend=dict(
@@ -335,7 +336,7 @@ def _(chur_xs, chur_ys, df_good, dm_xs, dm_ys, go, px):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Data analysis
+    ##Data analysis
     """)
     return
 
@@ -345,15 +346,15 @@ def _(mo):
     mo.md(r"""
     Rangos de valores iniciales de εHf (solamente para valores con 2sigma < 2.0):
 
-    Circones magmáticos:
-    Plutón de Cerro Montuoso (060072):  (+4.9 a +9.0)
-    Plutón de Parita (060065 - 060067): (+4.3 a +11.0)
+    - Circones magmáticos:
+        Plutón de Cerro Montuoso (060072):  (+4.9 a +9.0)
+        Plutón de Parita (060065 - 060067): (+4.3 a +11.0)
 
-    Circones detriticos:
-    Arena de rio Diablo (070242):       (+3.7 a +13.1), presenta un outlier de -3.2
-    Formación Cobachón (300351):        (+2.6 a +11.6)
-    Formación Gatuncillo (300339):      (+7.1 a +15.4)
-    Arena de rio Mamoni (300334):       (+8.2 a 14.0)
+    - Circones detriticos:
+        Arena de rio Diablo (070242):       (+3.7 a +13.1), presenta un outlier de -3.2
+        Formación Cobachón (300351):        (+2.6 a +11.6)
+        Formación Gatuncillo (300339):      (+7.1 a +15.4)
+        Arena de rio Mamoni (300334):       (+8.2 a 14.0)
 
     Los resultados obtenidos indican que el sistema magmático formado durante ca. 70-35 Ma se caracteriza por una firma juvenil, derivada de magmatismo mantélico, sin aporte de corteza continental antigua.
     """)
@@ -363,7 +364,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #Two‑stage crustal model age (Para circones antiguos, no valido para Panamá)
+    ##Two‑stage crustal model age (Para circones antiguos, no valido para Panamá)
     """)
     return
 
